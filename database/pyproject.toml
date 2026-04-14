@@ -1,0 +1,15 @@
+[project]
+name = "midas-database"
+version = "0.1.0"
+description = "SQLite scaffolding for midas.db"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    "streamlit>=1.44.0",
+    "pandas>=2.0.0",
+    "openpyxl",
+]
+
+[tool.uv]
+package = false
