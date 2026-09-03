@@ -1,0 +1,1 @@
+"""MIDAS backend application package."""

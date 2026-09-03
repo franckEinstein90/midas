@@ -1,0 +1,42 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FastAPI: MIDAS API",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload"
+      ],
+      "cwd": "${workspaceFolder}",
+      "justMyCode": true,
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/../.env"
+    },
+    {
+      "name": "MCP: MIDAS Tools",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "app.mcp.server",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": true,
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/../.env"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "MIDAS: API + MCP",
+      "configurations": [
+        "FastAPI: MIDAS API",
+        "MCP: MIDAS Tools"
+      ]
+    }
+  ]
+}
