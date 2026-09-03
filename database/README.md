@@ -1,51 +1,42 @@
-# midas_db scaffold
+# MIDAS database (embedded PostgreSQL + Alembic)
 
-This project uses `uv` to run a Python script that creates an SQLite database file named `midas.db` in this folder.
+Local database lifecycle, schema migrations, and DBeaver connection sync. The backend ORM models in `../backend/app/db/models.py` remain the source of truth for autogenerate.
 
-The initializer also creates portfolio tracking tables for:
-- Institutions (banks/brokers)
-- Accounts
-- Exchanges
-- Instruments (`STOCK`, `BOND`, `GIC`, `ETF`) with an optional exchange
-- Facets plus instrument-to-facet associations
-- Holdings snapshots by date
+## Setup
 
-Seeded institutions and accounts:
-- Wealthsimple: `FHSA`, `TFSA`, `Cash`
-- Scotiabank: `LRSP`, `Cash`, `RRSP`, `TFSA`
-
-Seeded facets:
-- `materials`
-- `gold`
-- `silver`
-- `defense`
-- `china`
-- `semidconductors`
-- `big tech`
-
-## Run
-
-Initialize the database:
-
-```bash
-uv run scripts/create_database.py
+```powershell
+cd database
+uv sync
+uv run midas-db init
 ```
 
-Load the current Scotiabank Cash holdings snapshot:
+This starts embedded PostgreSQL (pgembed), applies migrations, seeds reference data, and writes connection details to `../.midas/database.json`.
 
-```bash
-uv run scripts/populate_scotiabank_cash_holdings.py
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `uv run midas-db init` | Start Postgres + migrate + seed |
+| `uv run midas-db start` | Start Postgres only |
+| `uv run midas-db url` | Print saved `DATABASE_URL` |
+| `uv run midas-dbeaver` | Refresh DBeaver connection from `.midas/database.json` |
+
+## Migrations
+
+Embedded Postgres must be running (`uv run midas-db start`).
+
+```powershell
+cd database
+uv run alembic upgrade head
+uv run alembic revision --autogenerate -m "describe your change"
+uv run alembic current
+uv run alembic downgrade -1
 ```
 
-Start the Streamlit app (multi-page):
+See `migrations/README` for more detail.
 
-```bash
-uv run streamlit run main.py
-```
+## Connection
 
-The app includes:
-- **Dashboard**: Overview of holdings, accounts, and valuations across institutions.
-- **Tags**: Tag individual instruments with facets, manage available facets, and create new ones.
-- **Ingest**: Upload CSV or Excel files to add or update holdings data for an account.
+Apps read `DATABASE_URL` from the environment, or fall back to `../.midas/database.json` after `midas-db init`.
 
-The sidebar navigation will appear automatically and allow navigation between pages.
+DBeaver: connect as user `postgres` with an empty password (trust auth). Restart DBeaver after `midas-db start` if the port changed.
