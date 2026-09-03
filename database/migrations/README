@@ -1,0 +1,42 @@
+# MIDAS database migrations (Alembic)
+
+Schema changes are managed with Alembic from this directory. SQLAlchemy models in `../backend/app/db/models.py` remain the source of truth; generate revisions from model diffs.
+
+## Prerequisites
+
+Embedded Postgres must be running:
+
+```powershell
+cd database
+uv run midas-db start
+```
+
+## Common commands
+
+```powershell
+cd database
+
+# Apply all pending migrations
+uv run alembic upgrade head
+
+# Create a new migration after editing backend models
+uv run alembic revision --autogenerate -m "describe your change"
+
+# Show current revision
+uv run alembic current
+
+# Roll back one revision
+uv run alembic downgrade -1
+```
+
+`midas-db init` runs migrations automatically after starting embedded Postgres.
+
+## DBeaver
+
+After `midas-db start` or `init`, the DBeaver connection **MIDAS (embedded)** is updated automatically from `.midas/database.json`. To refresh manually:
+
+```powershell
+uv run midas-dbeaver
+```
+
+Embedded Postgres uses trust authentication — connect as user `postgres` with an empty password. Restart DBeaver if the port changed.

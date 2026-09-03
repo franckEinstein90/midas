@@ -1,5 +1,7 @@
+.env
 __pycache__/
 *.pyc
 .venv/
 *.csv
 *.db
+.midas_pgdata/

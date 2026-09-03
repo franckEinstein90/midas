@@ -45,8 +45,13 @@ These insights are based on the structure and tagging of the portfolio.
 
 The project is structured as a modular system:
 
-- Backend API: responsible for data modeling and aggregation
-- Frontend interface: responsible for visualization and interaction
+- **Backend API** (`backend/`): PostgreSQL-backed portfolio services, ADK agents, MCP tools, and LiteLLM model layer
+- **Frontend** (`frontend/`): React/Vite portfolio dashboard and application shell
+- **Database** (`database/`): Embedded PostgreSQL lifecycle, Alembic migrations, DBeaver sync
+
+See `.requirements/` for architecture documents, `backend/README.md`, `database/README.md`, and `frontend/README.md` for setup.
+
+Local database: embedded PostgreSQL via `pgembed` (`cd database && uv run midas-db init`) — no Docker required.
 
 ## Guiding Principle
 
